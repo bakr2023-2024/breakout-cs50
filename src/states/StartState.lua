@@ -7,6 +7,7 @@ function StartState:update()
 	elseif love.keyboard.active["escape"] then
 		love.event.quit()
     elseif love.keyboard.active['enter'] or love.keyboard.active['return'] then
+		sounds["confirm"]:play()
 		if choice == 1 then
 			gsm:change("play")
 		end
