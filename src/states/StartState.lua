@@ -6,7 +6,11 @@ function StartState:update()
 		sounds["paddle-hit"]:play()
 	elseif love.keyboard.active["escape"] then
 		love.event.quit()
-	end
+    elseif love.keyboard.active['enter'] or love.keyboard.active['return'] then
+		if choice == 1 then
+			gsm:change("play")
+		end
+    end
 end
 
 function StartState:render()

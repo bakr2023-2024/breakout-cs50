@@ -19,6 +19,9 @@ function love.load()
 		["hearts"] = love.graphics.newImage("graphics/hearts.png"),
 		["particle"] = love.graphics.newImage("graphics/particle.png"),
 	}
+	frames = {
+		["paddles"] = GeneratePaddleQuads(textures["main"]),
+	}
 
 	love.window.setMode(WW, WH, { resizable = true, vsync = true, fullscreen = false })
 	push:setupScreen(VW, VH, WW, WH, { fullscreen = false, resizable = true })
@@ -43,8 +46,11 @@ function love.load()
 
 	gsm = StateMachine({
 		["start"] = function()
-			return StartState()
-		end,
+		return StartState()
+        end,
+        ['play'] = function ()
+		return PlayState()
+        end
 	}, "start")
 	love.keyboard.active = {}
 end
