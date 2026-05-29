@@ -16,7 +16,5 @@ function Brick:hit()
 end
 
 function Brick:render()
-	if self.inPlay then
-		love.graphics.draw(textures["main"], frames["bricks"][self.tier + (4 * self.color)], self.x, self.y)
-	end
+	love.graphics.draw(textures["main"], frames["bricks"][self.tier + (4 * (self.color - 1))], self.x, self.y)
 end
