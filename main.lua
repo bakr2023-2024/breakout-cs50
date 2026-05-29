@@ -21,7 +21,9 @@ function love.load()
 	}
 
 	love.window.setMode(WW, WH, { resizable = true, vsync = true, fullscreen = false })
-	push:setupScreen(VW, VH, WW, WH, { fullscreen = false, resizable = true, pixelperfect = true })
+	push:setupScreen(VW, VH, WW, WH, { fullscreen = false, resizable = true })
+	backgroundSX = VW / (textures["background"]:getWidth() - 1)
+	backgroundSY = VH / (textures["background"]:getHeight() - 1)
 	sounds = {
 		["paddle-hit"] = love.audio.newSource("sounds/paddle_hit.wav", "static"),
 		["score"] = love.audio.newSource("sounds/score.wav", "static"),
@@ -44,18 +46,22 @@ function love.load()
 			return StartState()
 		end,
 	}, "start")
-	love.keyboard.keysPressed = {}
+	love.keyboard.active = {}
 end
 function love.resize(w, h)
 	push:resize(w, h)
 end
 function love.update(dt)
 	gsm:update(dt)
-	love.keyboard.keysPressed = {}
+	love.keyboard.active = {}
 end
-
+function love.keypressed(key)
+	love.keyboard.active[key] = true
+end
 function love.draw(dt)
 	push:start()
+
+	love.graphics.draw(textures["background"], 0, 0, 0, backgroundSX, backgroundSY)
 	gsm:render()
 	push:finish()
 end
