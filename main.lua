@@ -1,7 +1,61 @@
 require("src.Dependencies")
 
-function love.load() end
+function love.load()
+	love.window.setTitle("Breakout")
+	love.graphics.setDefaultFilter("nearest", "nearest")
+	math.randomseed(os.time())
 
-function love.update(dt) end
+	fonts = {
+		["small"] = love.graphics.newFont("fonts/font.ttf", 8),
+		["medium"] = love.graphics.newFont("fonts/font.ttf", 16),
+		["large"] = love.graphics.newFont("fonts/font.ttf", 32),
+	}
+	love.graphics.setFont(fonts["small"])
 
-function love.draw(dt) end
+	textures = {
+		["background"] = love.graphics.newImage("graphics/background.png"),
+		["main"] = love.graphics.newImage("graphics/breakout.png"),
+		["arrows"] = love.graphics.newImage("graphics/arrows.png"),
+		["hearts"] = love.graphics.newImage("graphics/hearts.png"),
+		["particle"] = love.graphics.newImage("graphics/particle.png"),
+	}
+
+	love.window.setMode(WW, WH, { resizable = true, vsync = true, fullscreen = false })
+	push:setupScreen(VW, VH, WW, WH, { fullscreen = false, resizable = true, pixelperfect = true })
+	sounds = {
+		["paddle-hit"] = love.audio.newSource("sounds/paddle_hit.wav", "static"),
+		["score"] = love.audio.newSource("sounds/score.wav", "static"),
+		["wall-hit"] = love.audio.newSource("sounds/wall_hit.wav", "static"),
+		["confirm"] = love.audio.newSource("sounds/confirm.wav", "static"),
+		["select"] = love.audio.newSource("sounds/select.wav", "static"),
+		["no-select"] = love.audio.newSource("sounds/no-select.wav", "static"),
+		["brick-hit-1"] = love.audio.newSource("sounds/brick-hit-1.wav", "static"),
+		["brick-hit-2"] = love.audio.newSource("sounds/brick-hit-2.wav", "static"),
+		["hurt"] = love.audio.newSource("sounds/hurt.wav", "static"),
+		["victory"] = love.audio.newSource("sounds/victory.wav", "static"),
+		["recover"] = love.audio.newSource("sounds/recover.wav", "static"),
+		["high-score"] = love.audio.newSource("sounds/high_score.wav", "static"),
+		["pause"] = love.audio.newSource("sounds/pause.wav", "static"),
+		["music"] = love.audio.newSource("sounds/music.wav", "static"),
+	}
+
+	gsm = StateMachine({
+		["start"] = function()
+			return StartState()
+		end,
+	}, "start")
+	love.keyboard.keysPressed = {}
+end
+function love.resize(w, h)
+	push:resize(w, h)
+end
+function love.update(dt)
+	gsm:update(dt)
+	love.keyboard.keysPressed = {}
+end
+
+function love.draw(dt)
+	push:start()
+	gsm:render()
+	push:finish()
+end
