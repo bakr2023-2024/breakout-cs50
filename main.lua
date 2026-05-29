@@ -21,7 +21,8 @@ function love.load()
 	}
 	frames = {
 		["paddles"] = GeneratePaddleQuads(textures["main"]),
-        ['balls'] = GenerateBallsQuads(textures['main'])
+        ['balls'] = GenerateBallsQuads(textures['main']),
+        ['bricks'] = GenerateBricksQuads(textures['main'])
 	}
 
 	love.window.setMode(WW, WH, { resizable = true, vsync = true, fullscreen = false })

@@ -41,3 +41,21 @@ function GenerateBallsQuads(atlas)
 	end
 	return quads
 end
+
+function GenerateBricksQuads(atlas)
+	local x = 0
+	local y = 0
+	local quads = {}
+	for i = 1, 24 do
+		if i ~= 22 and i ~= 23 then
+			quads[i] = love.graphics.newQuad(x, y, 32, 16, atlas)
+			if i % 6 == 0 then
+				x = 0
+				y = y + 16
+			else
+				x = x + 32
+			end
+		end
+	end
+	return quads
+end

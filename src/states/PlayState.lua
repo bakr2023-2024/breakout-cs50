@@ -1,6 +1,7 @@
 PlayState = Class({ __includes = BaseState })
 
 function PlayState:init()
+	self.bricks = {}
 	self.paddle = Paddle()
 	self.ball = Ball(1)
 	self.ball.dx = math.random(-200, 200)
