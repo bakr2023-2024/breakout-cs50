@@ -1,0 +1,10 @@
+WW = 1280
+WH = 720
+
+VW = 432
+VH = 243
+
+HVW = VW / 2
+HVH = VH / 2
+
+PADDLE_SPEED = 200
