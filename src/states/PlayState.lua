@@ -6,9 +6,10 @@ function PlayState:enter(params)
 	self.bricks = params.bricks
 	self.health = params.health
 	self.score = params.score
-	self.ball.dx = math.random(-BALL_DX / 2, BALL_DX / 2)
-	self.ball.dy = math.random(-BALL_DY * 2, BALL_DY * 2)
+	self.ball.dx = (math.random(1, 2) == 1 and -1 or 1) * math.random(BALL_DX / 6, BALL_DX)
+	self.ball.dy = (math.random(1, 2) == 1 and -1 or 1) * math.random(BALL_DY / 6, BALL_DY)
 	self.level = params.level
+	self.highscores = params.highscores
 	self.paused = false
 end
 function PlayState:update(dt)
@@ -27,7 +28,7 @@ function PlayState:update(dt)
 		self.health = self.health - 1
 		sounds["hurt"]:play()
 		if self.health == 0 then
-			gsm:change("gameOver", { score = self.score })
+			gsm:change("gameOver", { score = self.score, highscores = self.highscores })
 		else
 			gsm:change("serve", {
 				paddle = self.paddle,
@@ -35,6 +36,7 @@ function PlayState:update(dt)
 				health = self.health,
 				bricks = self.bricks,
 				level = self.level,
+				highscores = self.highscores,
 			})
 		end
 	end
@@ -75,10 +77,14 @@ function PlayState:update(dt)
 	end
 	if self:checkVictory() then
 		sounds["victory"]:play()
-		gsm:change(
-			"victory",
-			{ score = self.score, level = self.level, paddle = self.paddle, health = self.health, ball = self.ball }
-		)
+		gsm:change("victory", {
+			score = self.score,
+			level = self.level,
+			paddle = self.paddle,
+			health = self.health,
+			ball = self.ball,
+			highscores = self.highscores,
+		})
 	end
 end
 function PlayState:checkVictory()

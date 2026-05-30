@@ -1,5 +1,4 @@
 require("src.Dependencies")
-
 function love.load()
 	love.window.setTitle("Breakout")
 	love.graphics.setDefaultFilter("nearest", "nearest")
@@ -21,9 +20,9 @@ function love.load()
 	}
 	frames = {
 		["paddles"] = GeneratePaddleQuads(textures["main"]),
-        ['balls'] = GenerateBallsQuads(textures['main']),
-        ['bricks'] = GenerateBricksQuads(textures['main']),
-        ['hearts'] = GenerateHeartsQuads(textures['main'])
+		["balls"] = GenerateBallsQuads(textures["main"]),
+		["bricks"] = GenerateBricksQuads(textures["main"]),
+		["hearts"] = GenerateHeartsQuads(textures["main"]),
 	}
 
 	love.window.setMode(WW, WH, { resizable = true, vsync = true, fullscreen = false })
@@ -51,19 +50,26 @@ function love.load()
 		["start"] = function()
 			return StartState()
 		end,
+		["highscore"] = function()
+			return HighScoreState()
+		end,
 		["serve"] = function()
 			return ServeState()
 		end,
 		["play"] = function()
 			return PlayState()
 		end,
-        ['victory'] = function()
-		return VictoryState()
-        end,
-        ['gameOver'] = function()
-		return GameOverState()
-        end
-	}, "start")
+		["victory"] = function()
+			return VictoryState()
+		end,
+		["gameOver"] = function()
+			return GameOverState()
+		end,
+		["enterHighscore"] = function()
+			return EnterHighScoreState()
+		end,
+	})
+	gsm:change("start", { highscores = loadHighscores() })
 	love.keyboard.active = {}
 end
 function love.resize(w, h)
@@ -84,16 +90,45 @@ function love.draw(dt)
 	showFPS()
 	push:finish()
 end
+function loadHighscores()
+	love.filesystem.setIdentity("breakout")
+	if not love.filesystem.getInfo("scores.lst") then
+		local score = ""
+		for i = 10, 1, -1 do
+			score = score .. "BKR\n" .. tostring(i * 100) .. "\n"
+		end
+		love.filesystem.write("scores.lst", score)
+	end
+	local scores = {}
+	for i = 1, 10 do
+		scores[i] = { name = nil, score = nil }
+	end
+	local name = true
+	local counter = 1
+	for line in love.filesystem.lines("scores.lst") do
+		if name then
+			scores[counter].name = string.sub(line, 1, 3)
+		else
+			scores[counter].score = tonumber(line)
+			counter = counter + 1
+		end
+		name = not name
+	end
+	return scores
+end
+
 function showFPS()
 	love.graphics.setFont(fonts["small"])
 	love.graphics.setColor(0, 1, 0, 1)
 	love.graphics.print(tostring(love.timer.getFPS()), 5, 5)
 	love.graphics.setColor(1, 1, 1, 1)
 end
+
 function renderScore(score)
 	love.graphics.setFont(fonts["small"])
 	love.graphics.print("Score: " .. tostring(score), VW - 60, 5)
 end
+
 function renderHealth(health)
 	local xOff = 0
 	for i = 1, health do

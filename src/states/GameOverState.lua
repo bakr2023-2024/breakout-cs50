@@ -2,11 +2,26 @@ GameOverState = Class({ __includes = BaseState })
 
 function GameOverState:enter(params)
 	self.score = params.score
+	self.highscores = params.highscores
 end
 
 function GameOverState:update()
 	if love.keyboard.active["enter"] or love.keyboard.active["return"] then
-		gsm:change("start")
+		local scoreIdx = 10
+		local highscore = false
+		for i = 10, 1, -1 do
+			if self.score < self.highscores[i].score then
+				break
+			end
+			highscore = true
+			scoreIdx = i
+		end
+		if highscore then
+			sounds["high-score"]:play()
+			gsm:change("enterHighscore", { score = self.score, scoreIdx = scoreIdx, highscores = self.highscores })
+		else
+			gsm:change("start", { highscores = self.highscores })
+		end
 	elseif love.keyboard.active["escape"] then
 		love.event.quit()
 	end

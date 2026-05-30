@@ -1,7 +1,5 @@
 ServeState = Class({ __includes = BaseState })
 
-function ServeState:init() end
-
 function ServeState:enter(params)
 	self.paddle = params.paddle
 	self.ball = Ball(math.random(1, #frames["balls"]))
@@ -9,6 +7,7 @@ function ServeState:enter(params)
 	self.health = params.health
 	self.level = params.level
 	self.bricks = params.bricks
+	self.highscores = params.highscores
 end
 function ServeState:update(dt)
 	self.paddle:update(dt)
@@ -22,6 +21,7 @@ function ServeState:update(dt)
 			health = self.health,
 			bricks = self.bricks,
 			level = self.level,
+			highscores = self.highscores,
 		})
 	elseif love.keyboard.active["escape"] then
 		love.event.quit()

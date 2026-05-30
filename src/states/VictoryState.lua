@@ -6,6 +6,7 @@ function VictoryState:enter(params)
 	self.score = params.score
 	self.health = params.health
 	self.ball = params.ball
+	self.highscores = params.highscores
 end
 
 function VictoryState:update()
@@ -15,6 +16,7 @@ function VictoryState:update()
 			paddle = self.paddle,
 			score = self.score,
 			health = self.health,
+			highscores = self.highscores,
 			bricks = LevelMaker.createMap(self.level + 1),
 		})
 	elseif love.keyboard.active["escape"] then

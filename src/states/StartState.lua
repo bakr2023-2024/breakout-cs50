@@ -1,12 +1,15 @@
 StartState = Class({__includes=BaseState})
 local choice = 1
+function StartState:enter(params)
+	self.highscores = params.highscores
+end
 function StartState:update()
 	if love.keyboard.active["up"] or love.keyboard.active["down"] then
 		choice = choice == 1 and 2 or 1
 		sounds["paddle-hit"]:play()
 	elseif love.keyboard.active["escape"] then
 		love.event.quit()
-    elseif love.keyboard.active['enter'] or love.keyboard.active['return'] then
+	elseif love.keyboard.active["enter"] or love.keyboard.active["return"] then
 		sounds["confirm"]:play()
 		if choice == 1 then
 			gsm:change("serve", {
@@ -15,10 +18,13 @@ function StartState:update()
 				score = 0,
 				health = 3,
 				bricks = LevelMaker.createMap(1),
-                level = 1
+				level = 1,
+				highscores = self.highscores,
 			})
+		elseif choice == 2 then
+			gsm:change("highscore", { highscores = self.highscores })
 		end
-    end
+	end
 end
 
 function StartState:render()
