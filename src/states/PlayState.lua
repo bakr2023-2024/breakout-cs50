@@ -1,8 +1,5 @@
 PlayState = Class({ __includes = BaseState })
 local abs = math.abs
-function PlayState:init()
-
-end
 function PlayState:enter(params)
 	self.paddle = params.paddle
 	self.ball = params.ball
@@ -52,6 +49,7 @@ function PlayState:update(dt)
 		sounds["paddle-hit"]:play()
 	end
 	for i, brick in ipairs(self.bricks) do
+		brick:update(dt)
 		if brick.inPlay and self.ball:collides(brick) then
 			brick:hit()
 			self.score = self.score + (brick.tier * TIER_MULT + brick.color * COLOR_MULT)
@@ -73,12 +71,15 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
-    renderScore(self.score)
+	renderScore(self.score)
 	renderHealth(self.health)
 	for i, brick in ipairs(self.bricks) do
 		if brick.inPlay then
 			brick:render()
 		end
+	end
+	for i, brick in ipairs(self.bricks) do
+		brick:renderParticles()
 	end
 	self.paddle:render()
 	self.ball:render()
