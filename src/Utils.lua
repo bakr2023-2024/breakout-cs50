@@ -1,9 +1,12 @@
-function GenerateQuads(atlas, tileWidth, tileHeight, maxCount)
+function GenerateQuads(atlas, tileWidth, tileHeight, offsetX, offsetY, maxCount)
 	local sheetWidth, sheetHeight = atlas:getWidth() / tileWidth, atlas:getHeight() / tileHeight
+	local ox = (offsetX or 0) / tileWidth
+	local oy = (offsetY or 0) / tileHeight
+	maxCount = maxCount or sheetWidth * sheetHeight
 	local counter = 1
 	local quads = {}
-	for y = 0, sheetHeight - 1 do
-		for x = 0, sheetWidth - 1 do
+	for y = oy, sheetHeight - 1 do
+		for x = ox, sheetWidth - 1 do
 			quads[counter] = love.graphics.newQuad(x * tileWidth, y * tileHeight, tileWidth, tileHeight, atlas)
 			counter = counter + 1
 			if counter > maxCount then
@@ -58,8 +61,8 @@ function GenerateBallsQuads(atlas)
 end
 
 function GenerateBricksQuads(atlas)
-	local quads = GenerateQuads(atlas, 32, 16, 24)
-	table.remove(quads, 22)
+	local quads = GenerateQuads(atlas, 32, 16, 0, 0, 24)
 	table.remove(quads, 23)
+	table.remove(quads, 22)
 	return quads
 end

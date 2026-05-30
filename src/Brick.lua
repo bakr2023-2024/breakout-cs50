@@ -34,8 +34,6 @@ function Brick:hit()
 		0
 	)
 	self.pSystem:emit(64)
-	sounds["brick-hit-2"]:stop()
-	sounds["brick-hit-2"]:play()
 	if self.tier > 0 then
 		self.tier = self.tier - 1
 	else
@@ -52,7 +50,12 @@ function Brick:update(dt)
 	self.pSystem:update(dt)
 end
 function Brick:render()
-	love.graphics.draw(textures["main"], frames["bricks"][1 + self.tier + (4 * (self.color - 1))], self.x, self.y)
+	love.graphics.draw(
+		textures["main"],
+		frames["bricks"][self.locked and 22 or (1 + self.tier + (4 * (self.color - 1)))],
+		self.x,
+		self.y
+	)
 end
 function Brick:renderParticles()
 	love.graphics.draw(self.pSystem, self.x + BRICK_W / 2, self.y + BRICK_H / 2)

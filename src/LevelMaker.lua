@@ -35,5 +35,12 @@ function LevelMaker.createMap(level)
 			::continue::
 		end
 	end
-	return #bricks == 0 and LevelMaker.createMap(level) or bricks
+	if #bricks == 0 then
+		return LevelMaker.createMap(level)
+	else
+		if level % 2 == 0 then
+			bricks[math.random(1, #bricks)].locked = true
+		end
+		return bricks
+	end
 end
