@@ -46,7 +46,8 @@ function love.load()
 		["pause"] = love.audio.newSource("sounds/pause.wav", "static"),
 		["music"] = love.audio.newSource("sounds/music.wav", "static"),
 	}
-
+	sounds["music"]:setLooping(true)
+	sounds["music"]:play()
 	gsm = StateMachine({
 		["start"] = function()
 			return StartState()
