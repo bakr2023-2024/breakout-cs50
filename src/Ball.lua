@@ -1,8 +1,8 @@
 Ball = Class()
 
 function Ball:init(skin)
-	self.width = 8
-	self.height = 8
+	self.width = BALL_R * 2
+	self.height = BALL_R * 2
 	self.x = HVW - self.width / 2
 	self.y = HVH - self.height / 2
 	self.dx = 0

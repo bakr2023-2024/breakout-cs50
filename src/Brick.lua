@@ -3,8 +3,8 @@ Brick = Class()
 function Brick:init(x, y)
 	self.x = x
 	self.y = y
-	self.width = 32
-	self.height = 16
+	self.width = BRICK_W
+	self.height = BRICK_H
 	self.color = 1
 	self.tier = 1
 	self.inPlay = true

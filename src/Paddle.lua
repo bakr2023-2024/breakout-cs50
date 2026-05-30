@@ -1,5 +1,6 @@
 Paddle = Class()
-
+local min = math.min
+local max = math.max
 function Paddle:init()
 	self.width = 64
 	self.height = 16
@@ -18,7 +19,7 @@ function Paddle:update(dt)
 	else
 		self.dx = 0
 	end
-	self.x = math.max(math.min(self.x + self.dx * dt, VW - self.width), 0)
+	self.x = max(min(self.x + self.dx * dt, VW - self.width), 0)
 end
 
 function Paddle:render()

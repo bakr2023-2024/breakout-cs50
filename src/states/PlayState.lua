@@ -1,10 +1,10 @@
 PlayState = Class({ __includes = BaseState })
-
+local abs = math.abs
 function PlayState:init()
 	self.paddle = Paddle()
 	self.ball = Ball(1)
-	self.ball.dx = math.random(-200, 200)
-	self.ball.dy = math.random(-50, 50)
+	self.ball.dx = math.random(-BALL_DX, BALL_DX)
+	self.ball.dy = math.random(-BALL_DY, BALL_DY)
 	self.bricks = LevelMaker.createMap()
 	self.paused = false
 end
@@ -22,12 +22,35 @@ function PlayState:update(dt)
 	self.paddle:update(dt)
 	self.ball:update(dt)
 	if self.ball:collides(self.paddle) then
+		self.ball.y = self.paddle.y - self.ball.height
 		self.ball.dy = -self.ball.dy
+		local paddleCx = self.paddle.x + self.paddle.width / 2
+		local paddleDirX = self.paddle.dx < 0 and -1 or self.paddle.dx > 0 and 1 or 0
+		if self.ball.x < paddleCx and paddleDirX == -1 then
+			local ballOx = paddleCx - self.ball.x
+			self.ball.dx = -(BOUNCE_DX + ballOx * BOUNCE_MULT)
+		elseif self.ball.x > paddleCx and paddleDirX == 1 then
+			local ballOx = self.ball.x - paddleCx
+			self.ball.dx = BOUNCE_DX + ballOx * BOUNCE_MULT
+		end
 		sounds["paddle-hit"]:play()
 	end
 	for i, brick in ipairs(self.bricks) do
 		if brick.inPlay and self.ball:collides(brick) then
 			brick:hit()
+			local cBx, cBy = brick.x + BRICK_W / 2, brick.y + BRICK_H / 2
+			local cbx, cby = self.ball.x + BALL_R, self.ball.y + BALL_R
+			local ox, oy = cBx - cbx, cBy - cby
+			local px, py = BRICK_W / 2 + BALL_R - abs(ox), BRICK_H / 2 + BALL_R - abs(oy)
+			if px < py then
+				self.ball.dx = -self.ball.dx
+				self.ball.x = self.ball.x + (ox > 0 and -px or px)
+			else
+				self.ball.dy = -self.ball.dy
+				self.ball.y = self.ball.y + (oy > 0 and -py or py)
+			end
+			self.ball.dy = self.ball.dy * BALL_PROGRESS
+			break
 		end
 	end
 end
