@@ -1,13 +1,13 @@
 Paddle = Class()
 local min = math.min
 local max = math.max
-function Paddle:init()
+function Paddle:init(skin)
 	self.width = 64
 	self.height = 16
 	self.x = HVW - self.width / 2
 	self.y = VH - self.height * 2
 	self.dx = 0
-	self.skin = 1
+	self.skin = skin
 	self.size = 2
 end
 

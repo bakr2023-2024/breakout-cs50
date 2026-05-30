@@ -13,4 +13,5 @@ require("src.LevelMaker")
 
 require("src.states.BaseState")
 require("src.states.StartState")
+require("src.states.ServeState")
 require("src.states.PlayState")

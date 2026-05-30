@@ -1,14 +1,18 @@
 PlayState = Class({ __includes = BaseState })
 local abs = math.abs
 function PlayState:init()
-	self.paddle = Paddle()
-	self.ball = Ball(1)
+
+end
+function PlayState:enter(params)
+	self.paddle = params.paddle
+	self.ball = params.ball
+	self.bricks = params.bricks
+	self.health = params.health
+	self.score = params.score
 	self.ball.dx = math.random(-BALL_DX, BALL_DX)
 	self.ball.dy = math.random(-BALL_DY, BALL_DY)
-	self.bricks = LevelMaker.createMap()
 	self.paused = false
 end
-
 function PlayState:update(dt)
 	if love.keyboard.active["space"] then
 		self.paused = not self.paused
@@ -21,6 +25,11 @@ function PlayState:update(dt)
 	end
 	self.paddle:update(dt)
 	self.ball:update(dt)
+	if self.ball.y >= VH then
+		self.health = self.health - 1
+		sounds["hurt"]:play()
+		gsm:change("serve", { paddle = self.paddle, score = self.score, health = self.health, bricks = self.bricks })
+	end
 	if self.ball:collides(self.paddle) then
 		self.ball.y = self.paddle.y - self.ball.height
 		self.ball.dy = -self.ball.dy
@@ -38,6 +47,7 @@ function PlayState:update(dt)
 	for i, brick in ipairs(self.bricks) do
 		if brick.inPlay and self.ball:collides(brick) then
 			brick:hit()
+			self.score = self.score + brick.tier * BRICK_SCORE
 			local cBx, cBy = brick.x + BRICK_W / 2, brick.y + BRICK_H / 2
 			local cbx, cby = self.ball.x + BALL_R, self.ball.y + BALL_R
 			local ox, oy = cBx - cbx, cBy - cby
@@ -56,6 +66,8 @@ function PlayState:update(dt)
 end
 
 function PlayState:render()
+    renderScore(self.score)
+    -- renderHealth(self.health)
 	for i, brick in ipairs(self.bricks) do
 		if brick.inPlay then
 			brick:render()

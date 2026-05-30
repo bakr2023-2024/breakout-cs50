@@ -50,9 +50,12 @@ function love.load()
 		["start"] = function()
 		return StartState()
         end,
+        ['serve']=function ()
+		return ServeState()
+        end,
         ['play'] = function ()
 		return PlayState()
-        end
+        end,
 	}, "start")
 	love.keyboard.active = {}
 end
@@ -79,4 +82,8 @@ function showFPS()
 	love.graphics.setColor(0, 1, 0, 1)
 	love.graphics.print(tostring(love.timer.getFPS()), 5, 5)
 	love.graphics.setColor(1, 1, 1, 1)
+end
+function renderScore(score)
+	love.graphics.setFont(fonts["small"])
+	love.graphics.print("Score: " .. tostring(score), VW - 60, 5)
 end
