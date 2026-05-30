@@ -28,7 +28,15 @@ function PlayState:update(dt)
 	if self.ball.y >= VH then
 		self.health = self.health - 1
 		sounds["hurt"]:play()
-		gsm:change("serve", { paddle = self.paddle, score = self.score, health = self.health, bricks = self.bricks })
+		if self.health == 0 then
+			gsm:change("gameOver", { score = self.score })
+		else
+			gsm:change(
+				"serve",
+				{ paddle = self.paddle, score = self.score, health = self.health, bricks = self.bricks }
+			)
+		end
+
 	end
 	if self.ball:collides(self.paddle) then
 		self.ball.y = self.paddle.y - self.ball.height

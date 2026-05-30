@@ -57,6 +57,9 @@ function love.load()
 		["play"] = function()
 			return PlayState()
 		end,
+        ['gameOver'] = function()
+		return GameOverState()
+        end
 	}, "start")
 	love.keyboard.active = {}
 end
