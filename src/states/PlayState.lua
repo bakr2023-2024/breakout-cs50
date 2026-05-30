@@ -9,8 +9,8 @@ function PlayState:enter(params)
 	self.bricks = params.bricks
 	self.health = params.health
 	self.score = params.score
-	self.ball.dx = math.random(-BALL_DX, BALL_DX)
-	self.ball.dy = math.random(-BALL_DY, BALL_DY)
+	self.ball.dx = math.random(-BALL_DX / 2, BALL_DX / 2)
+	self.ball.dy = math.random(-BALL_DY * 2, BALL_DY * 2)
 	self.paused = false
 end
 function PlayState:update(dt)
@@ -36,7 +36,6 @@ function PlayState:update(dt)
 				{ paddle = self.paddle, score = self.score, health = self.health, bricks = self.bricks }
 			)
 		end
-
 	end
 	if self.ball:collides(self.paddle) then
 		self.ball.y = self.paddle.y - self.ball.height
@@ -55,7 +54,7 @@ function PlayState:update(dt)
 	for i, brick in ipairs(self.bricks) do
 		if brick.inPlay and self.ball:collides(brick) then
 			brick:hit()
-			self.score = self.score + brick.tier * BRICK_SCORE
+			self.score = self.score + (brick.tier * TIER_MULT + brick.color * COLOR_MULT)
 			local cBx, cBy = brick.x + BRICK_W / 2, brick.y + BRICK_H / 2
 			local cbx, cby = self.ball.x + BALL_R, self.ball.y + BALL_R
 			local ox, oy = cBx - cbx, cBy - cby
