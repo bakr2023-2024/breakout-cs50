@@ -15,6 +15,7 @@ function StartState:update()
 				score = 0,
 				health = 3,
 				bricks = LevelMaker.createMap(1),
+                level = 1
 			})
 		end
     end

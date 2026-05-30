@@ -8,6 +8,7 @@ function PlayState:enter(params)
 	self.score = params.score
 	self.ball.dx = math.random(-BALL_DX / 2, BALL_DX / 2)
 	self.ball.dy = math.random(-BALL_DY * 2, BALL_DY * 2)
+	self.level = params.level
 	self.paused = false
 end
 function PlayState:update(dt)
@@ -28,10 +29,13 @@ function PlayState:update(dt)
 		if self.health == 0 then
 			gsm:change("gameOver", { score = self.score })
 		else
-			gsm:change(
-				"serve",
-				{ paddle = self.paddle, score = self.score, health = self.health, bricks = self.bricks }
-			)
+			gsm:change("serve", {
+				paddle = self.paddle,
+				score = self.score,
+				health = self.health,
+				bricks = self.bricks,
+				level = self.level,
+			})
 		end
 	end
 	if self.ball:collides(self.paddle) then
@@ -52,6 +56,7 @@ function PlayState:update(dt)
 		brick:update(dt)
 		if brick.inPlay and self.ball:collides(brick) then
 			brick:hit()
+
 			self.score = self.score + (brick.tier * TIER_MULT + brick.color * COLOR_MULT)
 			local cBx, cBy = brick.x + BRICK_W / 2, brick.y + BRICK_H / 2
 			local cbx, cby = self.ball.x + BALL_R, self.ball.y + BALL_R
@@ -68,8 +73,22 @@ function PlayState:update(dt)
 			break
 		end
 	end
+	if self:checkVictory() then
+		sounds["victory"]:play()
+		gsm:change(
+			"victory",
+			{ score = self.score, level = self.level, paddle = self.paddle, health = self.health, ball = self.ball }
+		)
+	end
 end
-
+function PlayState:checkVictory()
+	for i, brick in ipairs(self.bricks) do
+		if brick.inPlay then
+			return false
+		end
+	end
+	return true
+end
 function PlayState:render()
 	renderScore(self.score)
 	renderHealth(self.health)

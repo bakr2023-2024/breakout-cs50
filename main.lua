@@ -57,6 +57,9 @@ function love.load()
 		["play"] = function()
 			return PlayState()
 		end,
+        ['victory'] = function()
+		return VictoryState()
+        end,
         ['gameOver'] = function()
 		return GameOverState()
         end
