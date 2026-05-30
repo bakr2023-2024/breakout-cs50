@@ -22,7 +22,8 @@ function love.load()
 	frames = {
 		["paddles"] = GeneratePaddleQuads(textures["main"]),
         ['balls'] = GenerateBallsQuads(textures['main']),
-        ['bricks'] = GenerateBricksQuads(textures['main'])
+        ['bricks'] = GenerateBricksQuads(textures['main']),
+        ['hearts'] = GenerateHeartsQuads(textures['main'])
 	}
 
 	love.window.setMode(WW, WH, { resizable = true, vsync = true, fullscreen = false })
@@ -48,14 +49,14 @@ function love.load()
 
 	gsm = StateMachine({
 		["start"] = function()
-		return StartState()
-        end,
-        ['serve']=function ()
-		return ServeState()
-        end,
-        ['play'] = function ()
-		return PlayState()
-        end,
+			return StartState()
+		end,
+		["serve"] = function()
+			return ServeState()
+		end,
+		["play"] = function()
+			return PlayState()
+		end,
 	}, "start")
 	love.keyboard.active = {}
 end
@@ -86,4 +87,15 @@ end
 function renderScore(score)
 	love.graphics.setFont(fonts["small"])
 	love.graphics.print("Score: " .. tostring(score), VW - 60, 5)
+end
+function renderHealth(health)
+	local xOff = 0
+	for i = 1, health do
+		love.graphics.draw(textures["main"], frames["hearts"][1], VW - 100 + xOff, 5)
+		xOff = xOff + 11
+	end
+	for i = 1, 3 - health do
+		love.graphics.draw(textures["main"], frames["hearts"][2], VW - 100 + xOff, 5)
+		xOff = xOff + 11
+	end
 end

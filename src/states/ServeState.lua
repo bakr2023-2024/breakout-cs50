@@ -24,7 +24,7 @@ function ServeState:update(dt)
 end
 
 function ServeState:render()
-	-- renderHealth(self.health)
+	renderHealth(self.health)
 	renderScore(self.score)
 	self.paddle:render()
 	self.ball:render()

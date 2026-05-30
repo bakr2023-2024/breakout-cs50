@@ -59,3 +59,9 @@ function GenerateBricksQuads(atlas)
 	end
 	return quads
 end
+function GenerateHeartsQuads(atlas)
+	return {
+		love.graphics.newQuad(128, 48, 10, 9, atlas),
+		love.graphics.newQuad(138, 48, 10, 9, atlas),
+	}
+end

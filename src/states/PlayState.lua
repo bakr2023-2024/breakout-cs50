@@ -67,7 +67,7 @@ end
 
 function PlayState:render()
     renderScore(self.score)
-    -- renderHealth(self.health)
+	renderHealth(self.health)
 	for i, brick in ipairs(self.bricks) do
 		if brick.inPlay then
 			brick:render()
