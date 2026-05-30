@@ -22,8 +22,9 @@ function love.load()
 		["paddles"] = GeneratePaddleQuads(textures["main"]),
 		["balls"] = GenerateBallsQuads(textures["main"]),
 		["bricks"] = GenerateBricksQuads(textures["main"]),
-		["hearts"] = GenerateHeartsQuads(textures["main"]),
-	}
+		["hearts"] = GenerateQuads(textures["hearts"],10,9,2),
+		['arrows'] = GenerateQuads(textures["arrows"],24,24,2)
+}
 
 	love.window.setMode(WW, WH, { resizable = true, vsync = true, fullscreen = false })
 	push:setupScreen(VW, VH, WW, WH, { fullscreen = false, resizable = true })
@@ -132,11 +133,11 @@ end
 function renderHealth(health)
 	local xOff = 0
 	for i = 1, health do
-		love.graphics.draw(textures["main"], frames["hearts"][1], VW - 100 + xOff, 5)
+		love.graphics.draw(textures["hearts"], frames["hearts"][1], VW - 100 + xOff, 5)
 		xOff = xOff + 11
 	end
 	for i = 1, 3 - health do
-		love.graphics.draw(textures["main"], frames["hearts"][2], VW - 100 + xOff, 5)
+		love.graphics.draw(textures["hearts"], frames["hearts"][2], VW - 100 + xOff, 5)
 		xOff = xOff + 11
 	end
 end
