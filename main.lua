@@ -54,6 +54,9 @@ function love.load()
 		["highscore"] = function()
 			return HighScoreState()
 		end,
+		['paddleSelect'] = function()
+		return PaddleSelectState()
+		end,
 		["serve"] = function()
 			return ServeState()
 		end,

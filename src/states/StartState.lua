@@ -12,13 +12,7 @@ function StartState:update()
 	elseif love.keyboard.active["enter"] or love.keyboard.active["return"] then
 		sounds["confirm"]:play()
 		if choice == 1 then
-			gsm:change("serve", {
-				paddle = Paddle(1),
-				ball = Ball(math.random(1, #frames["balls"])),
-				score = 0,
-				health = 3,
-				bricks = LevelMaker.createMap(1),
-				level = 1,
+			gsm:change("paddleSelect", {
 				highscores = self.highscores,
 			})
 		elseif choice == 2 then
