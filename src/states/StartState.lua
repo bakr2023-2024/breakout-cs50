@@ -14,7 +14,7 @@ function StartState:update()
 				ball = Ball(math.random(1, #frames["balls"])),
 				score = 0,
 				health = 3,
-				bricks = LevelMaker.createMap(),
+				bricks = LevelMaker.createMap(1),
 			})
 		end
     end

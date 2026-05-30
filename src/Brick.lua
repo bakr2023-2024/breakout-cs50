@@ -1,6 +1,6 @@
 Brick = Class()
 
-function Brick:init(x, y)
+function Brick:init(x, y,locked)
 	self.x = x
 	self.y = y
 	self.width = BRICK_W
@@ -8,6 +8,7 @@ function Brick:init(x, y)
 	self.color = 1
 	self.tier = 1
 	self.inPlay = true
+	self.locked = locked or false
 end
 
 function Brick:hit()
