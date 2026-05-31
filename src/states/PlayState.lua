@@ -6,6 +6,7 @@ function PlayState:enter(params)
 	self.bricks = params.bricks
 	self.health = params.health
 	self.score = params.score
+	-- powerups currently available to pick
 	self.powerups = {}
 	self.balls[1].dx = math.random(-BALL_DX, BALL_DX)
 	self.balls[1].dy = -BALL_DY
@@ -27,17 +28,20 @@ function PlayState:update(dt)
 		return
 	end
 	self.timer = self.timer + dt
-	if self.timer >= 20 then
+	-- powerup spawn rate (every 20 seconds)
+	if self.timer >= SPAWN_POWERUP_RATE then
 		table.insert(self.powerups, Powerup(self.level))
 		self.timer = 0
 	end
 	self.paddle:update(dt)
+	-- remove balls that reach bottom of screen
 	for i = #self.balls, 1, -1 do
 		self.balls[i]:update(dt)
 		if self.balls[i].y >= VH then
 			table.remove(self.balls, i)
 		end
 	end
+	-- remove powerups that reach bottom of screen or collide with paddle (applies the powerup)
 	for i = #self.powerups, 1, -1 do
 		self.powerups[i]:update(dt)
 		if self.powerups[i].y >= VH then
@@ -47,6 +51,7 @@ function PlayState:update(dt)
 			table.remove(self.powerups, i)
 		end
 	end
+	-- if there are no balls left, we lose health and shrink in size
 	if #self.balls == 0 then
 		self.health = self.health - 1
 		if self.paddle.size > 1 then
@@ -67,6 +72,7 @@ function PlayState:update(dt)
 			})
 		end
 	end
+	-- collision detection between each ball and paddle
 	for i, ball in ipairs(self.balls) do
 		if ball:collides(self.paddle) then
 			ball.y = self.paddle.y - ball.height
@@ -83,6 +89,7 @@ function PlayState:update(dt)
 			sounds["paddle-hit"]:play()
 		end
 	end
+	-- collision detection between each brick and each ball
 	for i, brick in ipairs(self.bricks) do
 		brick:update(dt)
 		for k, ball in ipairs(self.balls) do
@@ -91,10 +98,12 @@ function PlayState:update(dt)
 				sounds["brick-hit-2"]:play()
 				if not brick.locked or (brick.locked and self.hasKey) then
 					local currScore = 0
+					-- brick is locked and we have key, so we unlock it and add 1000 points to current score and total score
 					if brick.locked then
 						currScore = currScore + 1000
 						brick.locked = false
 					else
+						-- add to current score and total score based on tier and color
 						brick:hit()
 						currScore = currScore + (brick.tier * TIER_MULT + brick.color * COLOR_MULT)
 					end
@@ -117,6 +126,7 @@ function PlayState:update(dt)
 			end
 		end
 	end
+	-- if current score is at least 1500 points, we grow in size
 	if self.bonus > 1500 then
 		sounds["recover"]:play()
 		if self.paddle.size < 4 then
@@ -132,6 +142,7 @@ function PlayState:update(dt)
 			level = self.level,
 			paddle = self.paddle,
 			health = self.health,
+			-- only one ball survives to next level
 			ball = self.balls[1],
 			highscores = self.highscores,
 		})

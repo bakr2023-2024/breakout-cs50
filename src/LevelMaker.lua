@@ -38,6 +38,7 @@ function LevelMaker.createMap(level)
 	if #bricks == 0 then
 		return LevelMaker.createMap(level)
 	else
+	-- make locked brick only in even-numbered levels
 		if level % 2 == 0 then
 			bricks[math.random(1, #bricks)].locked = true
 		end

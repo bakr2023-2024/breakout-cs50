@@ -1,3 +1,10 @@
+--[[
+powerup class has 4 powerup types:
+gain health (+1 health)
+lose health (-1 health)
+spawn balls (+2 balls)
+key (ability to unlock the locked brick)
+]]
 Powerup = Class()
 PowerupType = {
 	GAIN_HEALTH = 3,
@@ -5,6 +12,7 @@ PowerupType = {
 	SPAWN_BALLS = 9,
 	KEY = 10,
 }
+-- random powerup generation (with bias towards key powerup in levels that contain locked brick)
 function getRandomPowerup(level)
 	if level % 2 == 0 then
 		if math.random(1, 2) == 1 then
@@ -18,7 +26,7 @@ function getRandomPowerup(level)
 		return (r == 1 and PowerupType.SPAWN_BALLS or r == 2 and PowerupType.GAIN_HEALTH or PowerupType.LOSE_HEALTH)
 	end
 end
-
+-- powerups spawn from top of screen
 function Powerup:init(level)
 	self.type = getRandomPowerup(level)
 	self.width, self.height = 16, 16
@@ -26,10 +34,11 @@ function Powerup:init(level)
 	self.y = -16
 	self.dy = BALL_DY / 2
 end
-
+-- powerups move downwards each frame
 function Powerup:update(dt)
 	self.y = self.y + self.dy * dt
 end
+-- collision detection between powerup and paddle
 function Powerup:collides(target)
 	return not (
 		self.x >= target.x + target.width
@@ -38,10 +47,11 @@ function Powerup:collides(target)
 		or target.y >= self.y + self.height
 	)
 end
-
+-- applying powerup
 function Powerup:apply(playState)
 	if self.type == PowerupType.SPAWN_BALLS then
 		sounds["recover"]:play()
+        -- generate 2 new balls and add them to play state's balls
 		for i = 2, 3 do
 			local ball = Ball(playState.balls[1].skin)
 			ball.x, ball.y = playState.balls[1].x, playState.balls[1].y
@@ -59,7 +69,7 @@ function Powerup:apply(playState)
 		playState.health = playState.health == 1 and 1 or playState.health - 1
 	end
 end
-
+-- rendering powerup based on its type
 function Powerup:render()
 	love.graphics.draw(textures["main"], frames["power-ups"][self.type], self.x, self.y)
 end
