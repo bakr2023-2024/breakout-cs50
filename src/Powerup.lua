@@ -5,17 +5,22 @@ PowerupType = {
 	SPAWN_BALLS = 9,
 	KEY = 10,
 }
-function getRandomPowerup()
-	if math.random() > 0.35 then
+function getRandomPowerup(level)
+	if level % 2 == 0 then
+		if math.random(1, 2) == 1 then
+			local r = math.random(1, 3)
+			return (r == 1 and PowerupType.SPAWN_BALLS or r == 2 and PowerupType.GAIN_HEALTH or PowerupType.LOSE_HEALTH)
+		else
+			return PowerupType.KEY
+		end
+	else
 		local r = math.random(1, 3)
 		return (r == 1 and PowerupType.SPAWN_BALLS or r == 2 and PowerupType.GAIN_HEALTH or PowerupType.LOSE_HEALTH)
-	else
-		return PowerupType.KEY
 	end
 end
 
-function Powerup:init()
-	self.type = getRandomPowerup()
+function Powerup:init(level)
+	self.type = getRandomPowerup(level)
 	self.width, self.height = 16, 16
 	self.x = math.random(0, VW - 16)
 	self.y = -16

@@ -28,7 +28,7 @@ function PlayState:update(dt)
 	end
 	self.timer = self.timer + dt
 	if self.timer >= 20 then
-		table.insert(self.powerups, Powerup())
+		table.insert(self.powerups, Powerup(self.level))
 		self.timer = 0
 	end
 	self.paddle:update(dt)
